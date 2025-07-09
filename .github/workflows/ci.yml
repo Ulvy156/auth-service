@@ -10,19 +10,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # 👇 Install pnpm the proper way
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8  # or the pnpm version you're using
+
+      # 👇 Setup Node.js and enable pnpm caching
       - uses: actions/setup-node@v3
         with:
-          node-version: '18'     # or your Node version
-          cache: 'pnpm'          # enables pnpm-lock.yaml cache
+          node-version: '18'
+          cache: 'pnpm'
 
-      # ✅ Install pnpm
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      # ✅ Install dependencies
       - name: Install dependencies
         run: pnpm install
 
-      # ✅ Run your app/test/lint/etc.
       - name: Run tests
         run: pnpm test
