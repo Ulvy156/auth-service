@@ -12,14 +12,17 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: '18'   # or your Node version
-          cache: 'pnpm'
+          node-version: '18'     # or your Node version
+          cache: 'pnpm'          # enables pnpm-lock.yaml cache
 
+      # ✅ Install pnpm
       - name: Install pnpm
         run: npm install -g pnpm
 
+      # ✅ Install dependencies
       - name: Install dependencies
         run: pnpm install
 
+      # ✅ Run your app/test/lint/etc.
       - name: Run tests
         run: pnpm test
