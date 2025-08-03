@@ -24,7 +24,7 @@ export class AuthService implements OnModuleInit {
     console.info('Kafka connected');
   }
 
-  async validateUser(email: string, password: string): Promise<any> {
+  async validateUser(email: string, password: string) {
     const user = await lastValueFrom(
       this.userClient
         .send('validate.user', { email, password })
@@ -33,7 +33,15 @@ export class AuthService implements OnModuleInit {
 
     if (!user || !user.id) throw new UnauthorizedException('User Not Found');
 
-    return this.generateToken(user.id, user.email);
+    const { access_token, refresh_token } = await this.generateToken(
+      user.id,
+      user.email,
+    );
+    return {
+      user,
+      access_token,
+      refresh_token,
+    };
   }
 
   async refreshAccessToken(refresh_token: string) {
@@ -46,7 +54,7 @@ export class AuthService implements OnModuleInit {
       console.error('Refresh token verification failed:', err);
       throw new UnauthorizedException('Invalid or expired refresh token');
     }
-    console.log(payload);
+
     return {
       access_token: {
         token: await this.generateAccessToken(payload.id, payload.email),
